@@ -1,6 +1,20 @@
 # Changelog
 
 
+## v1.0.3
+
+### Fixes
+
+- fix(release): enable signed changelog PR automation (516d7a7)
+
+### Other changes
+
+- docs(changelog): add v1.0.2 release notes (016a59c)
+
+
+**Full Changelog:** https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/compare/v1.0.2...v1.0.3
+
+
 ## v1.0.2
 
 ### Fixes
