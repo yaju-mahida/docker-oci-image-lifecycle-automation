@@ -10,8 +10,8 @@ permissions:
   contents: read
 
 jobs:
-  validate-yaml:
-    name: Validate Action Metadata and Workflows
+  validate-yaml-metadata:
+    name: Validate YAML and Marketplace Metadata
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -34,15 +34,83 @@ jobs:
               yaml.safe_load(path.read_text(encoding='utf-8'))
               print(f'Validated {path}')
           PYEOF
-      - name: Validate Marketplace metadata
+      - name: Validate Marketplace metadata contract
         shell: bash
         run: |
           set -euo pipefail
-          test -f action.yml
-          grep -q '^name:' action.yml
-          grep -q '^description:' action.yml
-          grep -q '^runs:' action.yml
-          grep -q '^branding:' action.yml
+          python3 - <<'PYEOF'
+          from pathlib import Path
+          import re
+          import yaml
+
+          action = yaml.safe_load(Path('action.yml').read_text(encoding='utf-8'))
+          required_top_level = {'name', 'description', 'inputs', 'outputs', 'runs', 'branding'}
+          missing = required_top_level - set(action)
+          if missing:
+              raise SystemExit(f'action.yml is missing required Marketplace metadata: {sorted(missing)}')
+
+          if action['runs'].get('using') != 'composite':
+              raise SystemExit('Root action.yml must use composite action runtime')
+
+          if len(action['description']) > 1000:
+              raise SystemExit('Root action.yml description is too long for Marketplace positioning')
+
+          for input_name, input_spec in action.get('inputs', {}).items():
+              if not input_spec.get('description'):
+                  raise SystemExit(f'action.yml input {input_name!r} is missing a description')
+
+          step_ids = {
+              step.get('id')
+              for step in action.get('runs', {}).get('steps', [])
+              if step.get('id')
+          }
+          output_ref = re.compile(r'\$\{\{\s*steps\.([^.]+)\.outputs\.([A-Za-z0-9_-]+)\s*\}\}')
+          for output_name, output_spec in action.get('outputs', {}).items():
+              if not output_spec.get('description'):
+                  raise SystemExit(f'action.yml output {output_name!r} is missing a description')
+              value = output_spec.get('value', '')
+              match = output_ref.fullmatch(value)
+              if not match:
+                  raise SystemExit(f'action.yml output {output_name!r} has an unsupported value expression: {value}')
+              if match.group(1) not in step_ids:
+                  raise SystemExit(
+                      f'action.yml output {output_name!r} references missing step id {match.group(1)!r}'
+                  )
+
+          branding = action['branding']
+          if not branding.get('icon') or not branding.get('color'):
+              raise SystemExit('action.yml branding must define both icon and color')
+
+          print('Validated root Marketplace metadata contract')
+          PYEOF
+
+  validate-github-actions-syntax:
+    name: Validate GitHub Actions Syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install actionlint
+        shell: bash
+        run: |
+          set -euo pipefail
+          go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.7
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+      - name: Run actionlint
+        shell: bash
+        run: |
+          set -euo pipefail
+          actionlint \
+            .github/workflows/*.yml \
+            templates/minimal-monitor.yml \
+            templates/secure-release.yml \
+            templates/enterprise-release.yml \
+            examples/*.yml
+
+  validate-distribution-contracts:
+    name: Validate Distribution Contracts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
       - name: Validate hybrid distribution contracts
         shell: bash
         run: |
@@ -53,50 +121,224 @@ jobs:
           import yaml
 
           repository = 'yaju-mahida/docker-image-lifecycle-automation'
-          workflow_inputs = {}
-          for workflow_path in Path('.github/workflows').glob('reusable-*.yml'):
-              workflow = yaml.safe_load(workflow_path.read_text(encoding='utf-8'))
+
+          def load_yaml(path):
+              return yaml.safe_load(Path(path).read_text(encoding='utf-8'))
+
+          def workflow_call(workflow):
               triggers = workflow.get('on', workflow.get(True, {}))
-              workflow_inputs[workflow_path.name] = set(
-                  triggers['workflow_call'].get('inputs', {})
-              )
+              return triggers.get('workflow_call', {})
 
-          for template_path in Path('templates').glob('*.yml'):
-              template = yaml.safe_load(template_path.read_text(encoding='utf-8'))
-              for job_name, job in template.get('jobs', {}).items():
-                  reference = job.get('uses', '')
-                  match = re.fullmatch(
-                      rf'{re.escape(repository)}/.github/workflows/(reusable-[\w-]+\.yml)@v1',
-                      reference,
-                  )
-                  if not match:
-                      continue
-                  workflow_name = match.group(1)
-                  unsupported = set(job.get('with', {})) - workflow_inputs[workflow_name]
-                  if unsupported:
-                      raise SystemExit(
-                          f'{template_path}:{job_name} passes unsupported inputs to '
-                          f'{workflow_name}: {sorted(unsupported)}'
-                      )
-                  print(f'Validated {template_path}:{job_name} -> {workflow_name}')
+          def actions_expressions(value):
+              if isinstance(value, str):
+                  yield value
+              elif isinstance(value, list):
+                  for item in value:
+                      yield from actions_expressions(item)
+              elif isinstance(value, dict):
+                  for item in value.values():
+                      yield from actions_expressions(item)
 
+          action_inputs = {'./': set(load_yaml('action.yml').get('inputs', {}))}
+          action_outputs = {'./': set(load_yaml('action.yml').get('outputs', {}))}
           for action_path in Path('.github/actions').glob('*/action.yml'):
-              action = yaml.safe_load(action_path.read_text(encoding='utf-8'))
+              action = load_yaml(action_path)
               if action.get('runs', {}).get('using') != 'composite':
                   raise SystemExit(f'{action_path} must be a composite action')
-              print(f'Validated composite action {action_path}')
+              action_name = action_path.parent.name
+              action_inputs[action_name] = set(action.get('inputs', {}))
+              action_outputs[action_name] = set(action.get('outputs', {}))
+              print(f'Validated composite action metadata {action_path}')
+
+          workflow_inputs = {}
+          workflow_required_inputs = {}
+          workflow_outputs = {}
+          workflow_secrets = {}
+          for workflow_path in Path('.github/workflows').glob('reusable-*.yml'):
+              workflow = load_yaml(workflow_path)
+              call = workflow_call(workflow)
+              if not call:
+                  raise SystemExit(f'{workflow_path} must define on.workflow_call')
+              inputs = call.get('inputs', {})
+              workflow_inputs[workflow_path.name] = set(inputs)
+              workflow_required_inputs[workflow_path.name] = {
+                  name for name, spec in inputs.items() if spec.get('required') is True
+              }
+              workflow_outputs[workflow_path.name] = set(call.get('outputs', {}))
+              workflow_secrets[workflow_path.name] = set(call.get('secrets', {}))
+              print(f'Validated reusable workflow contract {workflow_path}')
+
+          reusable_ref = re.compile(
+              rf'{re.escape(repository)}/\.github/workflows/(reusable-[\w-]+\.yml)@v1'
+          )
+          internal_action_ref = re.compile(
+              rf'{re.escape(repository)}/\.github/actions/([\w-]+)@v1'
+          )
+
+          workflow_files = [
+              *Path('.github/workflows').glob('*.yml'),
+              Path('templates/minimal-monitor.yml'),
+              Path('templates/secure-release.yml'),
+              Path('templates/enterprise-release.yml'),
+              *Path('examples').glob('*.yml'),
+          ]
+
+          for workflow_path in workflow_files:
+              workflow = load_yaml(workflow_path)
+              jobs = workflow.get('jobs', {})
+              for job_name, job in jobs.items():
+                  reference = job.get('uses', '')
+                  match = reusable_ref.fullmatch(reference)
+                  if match:
+                      workflow_name = match.group(1)
+                      supplied = set(job.get('with', {}))
+                      unsupported = supplied - workflow_inputs[workflow_name]
+                      missing = workflow_required_inputs[workflow_name] - supplied
+                      if unsupported:
+                          raise SystemExit(
+                              f'{workflow_path}:{job_name} passes unsupported inputs to '
+                              f'{workflow_name}: {sorted(unsupported)}'
+                          )
+                      if missing:
+                          raise SystemExit(
+                              f'{workflow_path}:{job_name} is missing required inputs for '
+                              f'{workflow_name}: {sorted(missing)}'
+                          )
+                      if 'secrets' in job and job['secrets'] != 'inherit' and not isinstance(job['secrets'], dict):
+                          raise SystemExit(f'{workflow_path}:{job_name} has unsupported secrets syntax')
+                      print(f'Validated {workflow_path}:{job_name} -> {workflow_name}')
+
+                  for step in job.get('steps', []):
+                      step_ref = step.get('uses', '')
+                      action_name = None
+                      if step_ref == './':
+                          action_name = './'
+                      else:
+                          internal_match = internal_action_ref.fullmatch(step_ref)
+                          if internal_match:
+                              action_name = internal_match.group(1)
+                      if not action_name:
+                          continue
+                      unsupported = set(step.get('with', {})) - action_inputs[action_name]
+                      if unsupported:
+                          raise SystemExit(
+                              f'{workflow_path}:{job_name}:{step.get("name", step_ref)} passes '
+                              f'unsupported inputs to {step_ref}: {sorted(unsupported)}'
+                          )
+                      print(f'Validated {workflow_path}:{job_name} step -> {step_ref}')
+
+              declared_job_outputs = {
+                  job_name: set((job.get('outputs') or {}).keys())
+                  for job_name, job in jobs.items()
+              }
+              for expression in actions_expressions(workflow):
+                  for needed_job in re.findall(r'needs\.([A-Za-z0-9_-]+)\.', expression):
+                      if needed_job not in jobs:
+                          raise SystemExit(f'{workflow_path} references missing needs job {needed_job!r}')
+                  for needed_job, output in re.findall(
+                      r'needs\.([A-Za-z0-9_-]+)\.outputs\.([A-Za-z0-9_-]+)',
+                      expression,
+                  ):
+                      if output not in declared_job_outputs.get(needed_job, set()):
+                          raise SystemExit(
+                              f'{workflow_path} references missing output '
+                              f'needs.{needed_job}.outputs.{output}'
+                          )
+
+          print('Validated hybrid distribution contracts')
           PYEOF
-      - name: Validate shared scripts
+
+  validate-shell-scripts:
+    name: Validate Shell Scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Validate shell syntax
         shell: bash
         run: |
           set -euo pipefail
           find scripts -type f -name '*.sh' -print0 | xargs -0 -r -n1 bash -n
+      - name: Run ShellCheck
+        shell: bash
+        run: |
+          set -euo pipefail
+          shellcheck scripts/*.sh
+
+  validate-documentation-references:
+    name: Validate Documentation References
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Validate repository references and documented examples
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PYEOF'
+          from pathlib import Path
+          import re
+          import yaml
+
+          canonical_repository = 'yaju-mahida/docker-image-lifecycle-automation'
+          stale_repository_patterns = {
+              'yaju-mahida/docker-image-automation': re.compile(
+                  r'(?<![A-Za-z0-9_.-])yaju-mahida/docker-image-automation(?![A-Za-z0-9_.-])'
+              ),
+              'yaju-mahida/docker-image-lifecycle': re.compile(
+                  r'(?<![A-Za-z0-9_.-])yaju-mahida/docker-image-lifecycle(?![A-Za-z0-9_.-])'
+              ),
+              'your-org/docker-image-lifecycle-automation': re.compile(
+                  r'(?<![A-Za-z0-9_.-])your-org/docker-image-lifecycle-automation(?![A-Za-z0-9_.-])'
+              ),
+          }
+
+          checked_paths = [
+              Path('README.md'),
+              *Path('docs').glob('*.md'),
+              *Path('examples').glob('*.yml'),
+              *Path('templates').glob('*.yml'),
+          ]
+          for path in checked_paths:
+              text = path.read_text(encoding='utf-8')
+              for stale, pattern in stale_repository_patterns.items():
+                  if pattern.search(text):
+                      raise SystemExit(f'{path} contains stale repository reference {stale!r}')
+
+          root_action = yaml.safe_load(Path('action.yml').read_text(encoding='utf-8'))
+          root_inputs = set(root_action.get('inputs', {}))
+          root_outputs = set(root_action.get('outputs', {}))
+
+          example = yaml.safe_load(Path('examples/digest-monitor.yml').read_text(encoding='utf-8'))
+          for job_name, job in example.get('jobs', {}).items():
+              for step in job.get('steps', []):
+                  if step.get('uses') != f'{canonical_repository}@v1':
+                      continue
+                  unsupported = set(step.get('with', {})) - root_inputs
+                  if unsupported:
+                      raise SystemExit(
+                          f'examples/digest-monitor.yml:{job_name} passes unsupported root action '
+                          f'inputs: {sorted(unsupported)}'
+                      )
+                  for output in re.findall(r'steps\.[^.]+\.outputs\.([A-Za-z0-9_-]+)', str(job)):
+                      if output not in root_outputs:
+                          raise SystemExit(
+                              f'examples/digest-monitor.yml:{job_name} references unsupported '
+                              f'root action output {output!r}'
+                          )
+
+          print('Validated documentation references and root action example contract')
+          PYEOF
+
+  run-fixtures:
+    name: Run Deterministic Fixtures
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
       - name: Run deterministic action fixtures
         shell: bash
         run: python3 tests/run-fixtures.py
 
   smoke-test-root-action:
-    name: Resolve Public OCI Digest
+    name: Smoke Test Root Action
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
