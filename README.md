@@ -4,6 +4,8 @@
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 [![OCI](https://img.shields.io/badge/OCI-compatible-2496ED?logo=docker&logoColor=white)](https://opencontainers.org/)
 
+**Monitor. Review. Release. Publish. Govern.**
+
 Detect upstream container-image drift, create reviewed Dockerfile updates,
 and release trusted OCI images with GitHub Actions. Docker Image Lifecycle
 Automation uses immutable manifest digests to detect tag moves and same-tag
