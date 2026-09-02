@@ -1,4 +1,4 @@
-# Dependabot configuration for the Docker Image Lifecycle Automation platform.
+# Dependabot configuration for the Docker OCI Image Lifecycle Automation platform.
 #
 # Scope: GitHub Actions dependencies only.
 #

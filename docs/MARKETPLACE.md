@@ -2,7 +2,7 @@
 
 ## Marketplace listing
 
-**Name:** Docker Image Lifecycle Automation
+**Name:** Docker OCI Image Lifecycle Automation
 
 **Short description:**
 
@@ -10,7 +10,7 @@
 
 **Long description:**
 
-Docker Image Lifecycle Automation is a hybrid GitHub Actions platform that
+Docker OCI Image Lifecycle Automation is a hybrid GitHub Actions platform that
 governs the entire lifecycle of a container image — from upstream drift
 detection to signed, published, and released artifacts.
 

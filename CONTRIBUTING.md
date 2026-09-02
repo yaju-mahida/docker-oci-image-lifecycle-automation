@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for improving Docker Image Lifecycle Automation.
+Thank you for improving Docker OCI Image Lifecycle Automation.
 
 ## Development process
 

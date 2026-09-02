@@ -1,6 +1,6 @@
 # Product Roadmap
 
-Docker Image Lifecycle Automation is developed as a lifecycle platform, not
+Docker OCI Image Lifecycle Automation is developed as a lifecycle platform, not
 as a collection of unrelated Docker actions. The roadmap prioritizes
 trustworthy digest monitoring and an excellent adopting-repository experience
 before organization-wide governance features.
