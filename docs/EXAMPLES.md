@@ -1,6 +1,6 @@
 # Public examples
 
-All examples use the `yaju-mahida/docker-image-lifecycle-automation@v1`
+All examples use the `yaju-mahida/docker-oci-image-lifecycle-automation@v1`
 reference. Replace the owner if you are consuming an approved fork rather
 than the upstream repository.
 
