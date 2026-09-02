@@ -3,7 +3,7 @@
 # Hub, ACR, ECR, Quay, Harbor, Artifactory, GitLab, OCIR, or any OCI
 # registry. This root action resolves an image tag to its immutable digest;
 # the platform's reusable workflows deliver the complete lifecycle.
-name: 'Docker Image Lifecycle Automation'
+name: 'Docker OCI Image Lifecycle Automation'
 description: >
   Monitor, review, build, scan, version, and publish OCI images with reusable GitHub workflows and actions.
 

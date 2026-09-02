@@ -1,6 +1,6 @@
 # Testing Guide
 
-Docker Image Lifecycle Automation uses layered testing so deterministic
+Docker OCI Image Lifecycle Automation uses layered testing so deterministic
 lifecycle policy changes do not depend on mutable public registries or
 production repositories.
 

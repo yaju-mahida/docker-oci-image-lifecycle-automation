@@ -48,7 +48,7 @@
 - docs(config): document PUBLISH_<TYPE> Repository Variable catalog in docker-automation.yml (3db1abf)
 - refactor(config): consolidate docker-automation.yml template and annotate all repository variables (d07ddf5)
 - test: add fixture-driven lifecycle validation (dd31e11)
-- Introduce a platform-level release workflow for Docker Image Lifecycle Automation. (29ae92c)
+- Introduce a platform-level release workflow for Docker OCI Image Lifecycle Automation. (29ae92c)
 - Initial release of Docker Image Lifecycle platform (68f597b)
 
 

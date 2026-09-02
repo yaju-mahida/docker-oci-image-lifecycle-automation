@@ -1,5 +1,5 @@
 # ==============================================================================
-# Docker Image Lifecycle Automation - Optional Repository Configuration File
+# Docker OCI Image Lifecycle Automation - Optional Repository Configuration File
 # Copy to .github/docker-automation.yml in consuming repositories.
 #
 # Precedence:

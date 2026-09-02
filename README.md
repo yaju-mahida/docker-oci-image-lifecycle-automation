@@ -1,4 +1,4 @@
-# Docker Image Lifecycle Automation
+# Docker OCI Image Lifecycle Automation
 
 [![GitHub Marketplace](https://img.shields.io/badge/GitHub%20Marketplace-Docker%20Image%20Lifecycle%20Automation-blue?logo=github)](https://github.com/marketplace)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
@@ -56,7 +56,7 @@ Approval and merge
 Build → test → scan → SBOM/provenance → publish → sign → GitHub Release
 ```
 
-## Why Docker Image Lifecycle Automation
+## Why Docker OCI Image Lifecycle Automation
 
 | Lifecycle problem | Platform capability |
 |---|---|
