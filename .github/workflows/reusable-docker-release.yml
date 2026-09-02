@@ -586,7 +586,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Lint Dockerfile
-        uses: hadolint/hadolint-action@v3.1.0
+        uses: hadolint/hadolint-action@v3.5.0
         with:
           dockerfile: ${{ needs.config.outputs.dockerfile }}
           failure-threshold: warning
@@ -600,7 +600,7 @@ jobs:
         run: docker load -i /tmp/candidate-image.tar
 
       - name: Vulnerability scan
-        uses: aquasecurity/trivy-action@0.24.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           input: /tmp/candidate-image.tar
           severity: ${{ needs.config.outputs.scan_severity_threshold }}
