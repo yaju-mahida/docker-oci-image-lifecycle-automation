@@ -148,12 +148,14 @@ jobs:
               fail "Release $NEW_TAG already exists."
             fi
 
-            echo "should_release=true" >> "$GITHUB_OUTPUT"
-            echo "bump=initial" >> "$GITHUB_OUTPUT"
-            echo "previous_tag=" >> "$GITHUB_OUTPUT"
-            echo "new_tag=$NEW_TAG" >> "$GITHUB_OUTPUT"
-            echo "major_tag=$MAJOR_TAG" >> "$GITHUB_OUTPUT"
-            echo "range=$RANGE" >> "$GITHUB_OUTPUT"
+            {
+              echo "should_release=true"
+              echo "bump=initial"
+              echo "previous_tag="
+              echo "new_tag=$NEW_TAG"
+              echo "major_tag=$MAJOR_TAG"
+              echo "range=$RANGE"
+            } >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -206,12 +208,14 @@ jobs:
             fail "Release $NEW_TAG already exists."
           fi
 
-          echo "should_release=true" >> "$GITHUB_OUTPUT"
-          echo "bump=$BUMP" >> "$GITHUB_OUTPUT"
-          echo "previous_tag=$LAST_TAG" >> "$GITHUB_OUTPUT"
-          echo "new_tag=$NEW_TAG" >> "$GITHUB_OUTPUT"
-          echo "major_tag=$MAJOR_TAG" >> "$GITHUB_OUTPUT"
-          echo "range=$RANGE" >> "$GITHUB_OUTPUT"
+          {
+            echo "should_release=true"
+            echo "bump=$BUMP"
+            echo "previous_tag=$LAST_TAG"
+            echo "new_tag=$NEW_TAG"
+            echo "major_tag=$MAJOR_TAG"
+            echo "range=$RANGE"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Generate release notes
         id: notes
