@@ -25,7 +25,7 @@ name: Release (SemVer)
 #      perf:                                Patch
 #      revert:                              Patch
 #      docs:                                No release
-#      chore:                               No release
+#      git:                                 No release
 #      ci:                                  No release
 #      test:                                No release
 #      refactor:                            No release
