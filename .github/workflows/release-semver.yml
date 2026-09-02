@@ -364,6 +364,7 @@ jobs:
         if: ${{ steps.version.outputs.should_release == 'true' && !inputs.dry-run }}
         uses: peter-evans/create-pull-request@v8
         with:
+          sign-commits: true
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "docs(changelog): add ${{ steps.version.outputs.new_tag }} release notes"
           branch: "automation/changelog-${{ steps.version.outputs.new_tag }}"
