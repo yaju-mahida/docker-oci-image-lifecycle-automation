@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.0.2
+
+### Fixes
+
+- fix: update repository references after rename to docker-oci-image-lifecycle-automation (5744f15)
+- fix(marketplace): align action.yml description with platform capabilities (3c45742)
+- fix(deps): bump the actions-minor-and-patch group across 1 directory with 2 updates (0c76b2a)
+
+
+**Full Changelog:** https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/compare/v1.0.1...v1.0.2
+
+
 ## v1.0.0
 
 ### Features
