@@ -1,0 +1,58 @@
+# Dependabot configuration for the Docker Image Lifecycle Automation platform.
+#
+# Scope: GitHub Actions dependencies only.
+#
+# Commit messages use the `fix(deps)` prefix so that dependency updates are
+# classified as Patch releases by `.github/workflows/release-semver.yml`
+# (RE_PATCH matches `^(fix|perf|revert)(\([^)]*\))?:`). Keeping dependency
+# bumps release-worthy means consumers pinned to `@v1` receive supply-chain
+# updates through a normal SemVer patch release.
+#
+# Deliberately NOT enabled:
+#
+#   docker
+#     `test-fixtures/**/Dockerfile` files are deterministic test fixtures.
+#     Their base image tags and digests are asserted against
+#     `expected-results.yml`, so an automated bump would break the fixture
+#     suite rather than improve security. These files are inputs to tests,
+#     not runtime dependencies.
+version: 2
+
+updates:
+  - package-ecosystem: github-actions
+    # `/` covers `.github/workflows`. Composite actions are not discovered
+    # automatically, so `.github/actions/*` is listed explicitly to keep
+    # third-party actions inside `registry-login` and friends up to date.
+    directories:
+      - /
+      - /.github/actions/*
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: Etc/UTC
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: fix(deps)
+    labels:
+      - dependencies
+      - github-actions
+    groups:
+      # Non-major bumps are low risk and are batched into a single pull
+      # request to reduce review overhead.
+      actions-minor-and-patch:
+        update-types:
+          - minor
+          - patch
+      # Major bumps can change action inputs, outputs, or runtime defaults,
+      # so they are grouped separately and reviewed on their own.
+      actions-major:
+        update-types:
+          - major
+    ignore:
+      # This repository publishes its own composite actions and reusable
+      # workflows and intentionally consumes them through the moving `v1`
+      # major tag. Allowing Dependabot to rewrite these to an exact release
+      # tag would break the documented `@v1` compatibility contract.
+      - dependency-name: yaju-mahida/docker-image-lifecycle-automation
+      - dependency-name: yaju-mahida/docker-image-lifecycle-automation/*
