@@ -1,6 +1,20 @@
 # Changelog
 
 
+## v1.0.4
+
+### Fixes
+
+- fix: update project branding and documentation references (0f42713)
+
+### Other changes
+
+- docs(changelog): add v1.0.3 release notes (01751f7)
+
+
+**Full Changelog:** https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/compare/v1.0.3...v1.0.4
+
+
 ## v1.0.3
 
 ### Fixes
