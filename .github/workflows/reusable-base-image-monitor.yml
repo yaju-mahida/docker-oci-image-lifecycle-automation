@@ -431,8 +431,14 @@ jobs:
             gh pr create --base "$BRANCH_NAME" --head "$UPDATE_BRANCH" \
               --title "$TITLE" --body "$BODY"
             PR_NUMBER="$(gh pr list --base "$BRANCH_NAME" --head "$UPDATE_BRANCH" --state open --json number --jq '.[0].number // empty')"
-            [ -n "$PR_NUMBER" ] && [ -n "$PR_REVIEWERS" ] && gh pr edit "$PR_NUMBER" --add-reviewer "$PR_REVIEWERS" || true
-            [ -n "$PR_NUMBER" ] && [ -n "$PR_ASSIGNEES" ] && gh pr edit "$PR_NUMBER" --add-assignee "$PR_ASSIGNEES" || true
+            if [ -n "$PR_NUMBER" ] && [ -n "$PR_REVIEWERS" ]; then
+              gh pr edit "$PR_NUMBER" --add-reviewer "$PR_REVIEWERS" \
+                || echo "::warning::Failed to add reviewers to PR #$PR_NUMBER."
+            fi
+            if [ -n "$PR_NUMBER" ] && [ -n "$PR_ASSIGNEES" ]; then
+              gh pr edit "$PR_NUMBER" --add-assignee "$PR_ASSIGNEES" \
+                || echo "::warning::Failed to add assignees to PR #$PR_NUMBER."
+            fi
           fi
 
           # Optional auto-merge: requires "Allow auto-merge" enabled in
@@ -473,6 +479,10 @@ jobs:
           DECISION_REASON: ${{ steps.decide.outputs.reason }}
           PR_URL: ${{ steps.create-pr.outputs.pr_url }}
         run: |
+          # Backticks in these printf format strings are literal Markdown code
+          # spans for the job summary, not command substitution, so they must
+          # stay inside single quotes and never expand.
+          # shellcheck disable=SC2016
           {
             printf '## Base Image Update Automation\n\n'
             printf -- '- **Monitoring enabled:** `%s`\n' "${MONITOR_ENABLED:-true}"

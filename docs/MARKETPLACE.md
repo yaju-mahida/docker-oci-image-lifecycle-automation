@@ -6,22 +6,30 @@
 
 **Short description:**
 
-> Resolve immutable OCI image digests and automate reviewed Docker base-image updates.
+> Monitor, release, secure, and publish container images across any OCI registry — governed, signed, and automated.
 
 **Long description:**
 
-Docker Image Lifecycle Automation is a digest-first OCI lifecycle platform
-for GitHub Actions. It resolves mutable image tags to immutable manifest
-digests, detects same-tag upstream rebuilds, and creates reviewable
-Dockerfile update pull requests.
+Docker Image Lifecycle Automation is a hybrid GitHub Actions platform that
+governs the entire lifecycle of a container image — from upstream drift
+detection to signed, published, and released artifacts.
 
-Use the included reusable workflows to build and test multi-platform images,
-scan vulnerabilities, generate SPDX SBOMs and BuildKit provenance, sign
-published digests with Cosign and GitHub OIDC, create releases, and publish
-to cloud and generic OCI registries.
+It monitors base images by immutable digest (not just tag strings), opens
+reviewable pull requests with reviewer/assignee routing when an update is
+detected, and — once merged — builds, tests, scans, signs, generates SBOM
+and provenance, versions, and publishes to GHCR, Docker Hub, ACR, ECR, Quay,
+Harbor, Artifactory, GitLab Container Registry, Oracle OCIR, or any private
+OCI-compliant registry.
 
-Start small with digest resolution. Adopt the complete lifecycle when you
-need governed monitoring, review, release, and distribution.
+Seven configurable release-tagging strategies (SemVer, date, prefix,
+upstream, custom pattern, and more), Repository-Variable-first
+configuration, GitHub Environment approval gates, and Cosign/OIDC signing
+make it suitable for both open-source projects and regulated enterprise
+release pipelines.
+
+Adopt at your own pace: start with a single digest-resolution step, or take
+the full reusable-workflow lifecycle with governed promotion and rollback
+support.
 
 The root Marketplace Action resolves a tag to a stable image digest. The
 repository also provides reusable workflows for the complete image lifecycle.
@@ -37,7 +45,10 @@ repository also provides reusable workflows for the complete image lifecycle.
 `base-image-monitoring`, `docker-image-update`, `image-digest`,
 `immutable-digest`, `container-security`, `supply-chain-security`, `sbom`,
 `provenance`, `cosign`, `slsa`, `trivy`, `multi-platform`,
-`container-registry`, `ghcr`, `docker-hub`, `platform-engineering`
+`container-registry`, `ghcr`, `docker-hub`, `platform-engineering`,
+`semver`, `release-automation`, `changelog-automation`,
+`dependency-update-automation`, `container-publishing`, `dockerhub`,
+`acr`, `ecr`, `harbor`, `artifactory`
 
 ## Marketplace Action
 

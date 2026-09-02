@@ -1,7 +1,10 @@
 name: 'Docker Image Lifecycle Automation'
 description: >
-  Resolve immutable OCI image digests for secure base-image monitoring and
-  reviewed Docker image updates.
+  Monitor upstream images, open reviewed update PRs, build/scan/sign/SBOM,
+  version with SemVer or custom tag strategies, and publish to GHCR, Docker
+  Hub, ACR, ECR, Quay, Harbor, Artifactory, GitLab, OCIR, or any OCI
+  registry. This root action resolves an image tag to its immutable digest;
+  the platform's reusable workflows deliver the complete lifecycle.
 
 inputs:
   registry:
