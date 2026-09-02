@@ -1,10 +1,11 @@
+# Monitor upstream images, open reviewed update PRs, build/scan/sign/SBOM,
+# version with SemVer or custom tag strategies, and publish to GHCR, Docker
+# Hub, ACR, ECR, Quay, Harbor, Artifactory, GitLab, OCIR, or any OCI
+# registry. This root action resolves an image tag to its immutable digest;
+# the platform's reusable workflows deliver the complete lifecycle.
 name: 'Docker Image Lifecycle Automation'
 description: >
-  Monitor upstream images, open reviewed update PRs, build/scan/sign/SBOM,
-  version with SemVer or custom tag strategies, and publish to GHCR, Docker
-  Hub, ACR, ECR, Quay, Harbor, Artifactory, GitLab, OCIR, or any OCI
-  registry. This root action resolves an image tag to its immutable digest;
-  the platform's reusable workflows deliver the complete lifecycle.
+  Monitor, review, build, scan, version, and publish OCI images with reusable GitHub workflows and actions.
 
 inputs:
   registry:
