@@ -3,7 +3,7 @@ name: Release (SemVer)
 # PLATFORM RELEASE WORKFLOW (SEMANTIC VERSIONING)
 #
 # This workflow automates versioning and releases for the
-# docker-image-lifecycle-automation platform itself (GitHub Action,
+# docker-oci-image-lifecycle-automation platform itself (GitHub Action,
 # reusable workflows, and composite actions).
 #
 # On every push to `main` or manual run:

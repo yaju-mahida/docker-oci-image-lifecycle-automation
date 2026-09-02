@@ -120,7 +120,7 @@ jobs:
           import re
           import yaml
 
-          repository = 'yaju-mahida/docker-image-lifecycle-automation'
+          repository = 'yaju-mahida/docker-oci-image-lifecycle-automation'
 
           def load_yaml(path):
               return yaml.safe_load(Path(path).read_text(encoding='utf-8'))
@@ -278,7 +278,7 @@ jobs:
           import re
           import yaml
 
-          canonical_repository = 'yaju-mahida/docker-image-lifecycle-automation'
+          canonical_repository = 'yaju-mahida/docker-oci-image-lifecycle-automation'
           stale_repository_patterns = {
               'yaju-mahida/docker-image-automation': re.compile(
                   r'(?<![A-Za-z0-9_.-])yaju-mahida/docker-image-automation(?![A-Za-z0-9_.-])'
@@ -286,8 +286,14 @@ jobs:
               'yaju-mahida/docker-image-lifecycle': re.compile(
                   r'(?<![A-Za-z0-9_.-])yaju-mahida/docker-image-lifecycle(?![A-Za-z0-9_.-])'
               ),
+              'yaju-mahida/docker-image-lifecycle-automation': re.compile(
+                  r'(?<![A-Za-z0-9_.-])yaju-mahida/docker-image-lifecycle-automation(?![A-Za-z0-9_.-])'
+              ),
               'your-org/docker-image-lifecycle-automation': re.compile(
                   r'(?<![A-Za-z0-9_.-])your-org/docker-image-lifecycle-automation(?![A-Za-z0-9_.-])'
+              ),
+              'your-org/docker-oci-image-lifecycle-automation': re.compile(
+                  r'(?<![A-Za-z0-9_.-])your-org/docker-oci-image-lifecycle-automation(?![A-Za-z0-9_.-])'
               ),
           }
 

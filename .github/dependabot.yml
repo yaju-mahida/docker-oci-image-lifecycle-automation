@@ -54,5 +54,5 @@ updates:
       # workflows and intentionally consumes them through the moving `v1`
       # major tag. Allowing Dependabot to rewrite these to an exact release
       # tag would break the documented `@v1` compatibility contract.
-      - dependency-name: yaju-mahida/docker-image-lifecycle-automation
-      - dependency-name: yaju-mahida/docker-image-lifecycle-automation/*
+      - dependency-name: yaju-mahida/docker-oci-image-lifecycle-automation
+      - dependency-name: yaju-mahida/docker-oci-image-lifecycle-automation/*
