@@ -1,8 +1,30 @@
 # Docker OCI Image Lifecycle Automation
 
-[![GitHub Marketplace](https://img.shields.io/badge/GitHub%20Marketplace-Docker%20Image%20Lifecycle%20Automation-blue?logo=github)](https://github.com/marketplace)
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
+<!-- Shields Product Section -->
+[![GitHub Marketplace](https://img.shields.io/badge/GitHub%20Marketplace-Docker%20Image%20Lifecycle%20Automation-blue?logo=github)](https://github.com/marketplace/actions/docker-oci-image-lifecycle-automation)
+[![Latest Release](https://img.shields.io/github/v/release/yaju-mahida/docker-oci-image-lifecycle-automation?label=Latest%20Release&logo=github)](https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/releases/latest)
+[![GitHub Repo](https://img.shields.io/badge/github-repo-blue?logo=github&logoColor=white&label=GitHub)](https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation)
 [![OCI](https://img.shields.io/badge/OCI-compatible-2496ED?logo=docker&logoColor=white)](https://opencontainers.org/)
+
+<!-- Shields Security & Trust Section -->
+[![CodeQL](https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/actions/workflows/codeql.yml/badge.svg)](https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/actions/workflows/codeql.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/yaju-mahida/docker-oci-image-lifecycle-automation/badge)](https://securityscorecards.dev/viewer/?uri=github.com/yaju-mahida/docker-oci-image-lifecycle-automation)
+[![Dependabot](https://img.shields.io/badge/Dependabot-enabled-brightgreen?logo=dependabot)](https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/security/dependabot)
+[![License: Apache-2.0](https://img.shields.io/github/license/yaju-mahida/docker-oci-image-lifecycle-automation)](LICENSE)
+
+<!-- Shields Getting Started Section -->
+[![Configuration: Docker Automation](https://img.shields.io/badge/Configuration-Docker%20Automation-orange?logo=githubactions)](https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/blob/main/templates/docker-automation.yml)
+[![Template: Secure Release](https://img.shields.io/badge/Template-Secure%20Release-green?logo=githubactions)](https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/blob/main/templates/secure-release.yml)
+[![Template: Enterprise Release](https://img.shields.io/badge/Template-Enterprise%20Release-green?logo=githubactions)](https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/blob/main/templates/enterprise-release.yml)
+
+<!-- Shields Community Section -->
+[![GitHub stars](https://img.shields.io/github/stars/yaju-mahida/docker-oci-image-lifecycle-automation?style=social&label=Stars)](https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/yaju-mahida/docker-oci-image-lifecycle-automation?style=social)](https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/yaju-mahida/docker-oci-image-lifecycle-automation?style=social)](https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/watchers)
+[![GitHub issues](https://img.shields.io/github/issues/yaju-mahida/docker-oci-image-lifecycle-automation?style=social)](https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/yaju-mahida/docker-oci-image-lifecycle-automation?style=social&label=Pull%20Requests)](https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/pulls)
+[![GitHub discussions](https://img.shields.io/github/discussions/yaju-mahida/docker-oci-image-lifecycle-automation?style=social&label=Discussions)](https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/discussions)
+
 
 **Monitor. Review. Release. Publish. Govern.**
 
