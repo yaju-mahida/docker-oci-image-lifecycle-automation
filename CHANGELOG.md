@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v1.1.0
+
+### Features
+
+- feat(security): add OpenSSF Scorecard workflow for supply-chain security (4ebf475)
+
+### Other changes
+
+- ci(release): configure changelog PR assignees and reviewers (7ebe391)
+- docs(readme): improve badge navigation and project visibility (275e78c)
+- docs(changelog): add v1.0.4 release notes (3b335ca)
+
+
+**Full Changelog:** https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/compare/v1.0.4...v1.1.0
+
+
 ## v1.0.4
 
 ### Fixes
