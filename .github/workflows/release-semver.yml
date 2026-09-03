@@ -378,3 +378,5 @@ jobs:
             already published by the `release-semver` workflow.
           labels: documentation,automated
           add-paths: CHANGELOG.md
+          assignees: ${{ vars.REPOSITORY_ASSIGNEES }}
+          reviewers: ${{ vars.REPOSITORY_REVIEWERS }}
