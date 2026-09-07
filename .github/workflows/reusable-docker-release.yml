@@ -366,7 +366,7 @@ jobs:
       environment: ${{ steps.effective.outputs.environment }}
       target_registries: ${{ steps.effective.outputs.target_registries }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 2
 
@@ -491,7 +491,7 @@ jobs:
       base_image_version: ${{ steps.extract.outputs.base_image_version }}
       new_git_tag: ${{ steps.calc.outputs.new_git_tag }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
@@ -520,7 +520,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ !inputs.dry-run }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
@@ -548,7 +548,7 @@ jobs:
           outputs: type=docker,dest=/tmp/candidate-image.tar
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: candidate-image
           path: /tmp/candidate-image.tar
@@ -583,7 +583,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ !inputs.dry-run }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
 
       - name: Lint Dockerfile
         uses: hadolint/hadolint-action@v3.5.0
@@ -615,7 +615,7 @@ jobs:
           output-file: sbom.spdx.json
 
       - name: Upload SBOM artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: sbom
           path: sbom.spdx.json
@@ -636,7 +636,7 @@ jobs:
     outputs:
       release_url: ${{ steps.generate-release.outputs.release_url }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
@@ -667,7 +667,7 @@ jobs:
       matrix:
         target: ${{ fromJSON(needs.config.outputs.target_registries) }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7.0.1
 
       - uses: docker/setup-qemu-action@v4
       - uses: docker/setup-buildx-action@v4
