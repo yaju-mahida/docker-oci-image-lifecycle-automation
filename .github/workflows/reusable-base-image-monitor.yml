@@ -176,7 +176,7 @@ jobs:
       pr_url: ${{ steps.create-pr.outputs.pr_url }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7.0.1
         with:
           # Full history so digest history can be reconstructed from the
           # Dockerfile's own git log for rollback detection.
