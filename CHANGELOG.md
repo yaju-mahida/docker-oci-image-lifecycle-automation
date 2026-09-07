@@ -1,6 +1,21 @@
 # Changelog
 
 
+## v1.1.1
+
+### Fixes
+
+- fix(deps): bump the actions-major group across 1 directory with 3 updates (9e6de80)
+- fix(deps): bump ossf/scorecard-action (3216390)
+
+### Other changes
+
+- docs(changelog): add v1.1.0 release notes (9608176)
+
+
+**Full Changelog:** https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/compare/v1.1.0...v1.1.1
+
+
 ## v1.1.0
 
 ### Features
