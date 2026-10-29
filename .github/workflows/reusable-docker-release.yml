@@ -548,7 +548,7 @@ jobs:
           outputs: type=docker,dest=/tmp/candidate-image.tar
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: candidate-image
           path: /tmp/candidate-image.tar
@@ -615,7 +615,7 @@ jobs:
           output-file: sbom.spdx.json
 
       - name: Upload SBOM artifact
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: sbom
           path: sbom.spdx.json
