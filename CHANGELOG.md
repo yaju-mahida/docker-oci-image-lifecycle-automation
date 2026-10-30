@@ -1,6 +1,20 @@
 # Changelog
 
 
+## v1.1.2
+
+### Fixes
+
+- fix(deps): bump the actions-minor-and-patch group across 1 directory with 2 updates (2dff79b)
+
+### Other changes
+
+- docs(changelog): add v1.1.1 release notes (b6123a3)
+
+
+**Full Changelog:** https://github.com/yaju-mahida/docker-oci-image-lifecycle-automation/compare/v1.1.1...v1.1.2
+
+
 ## v1.1.1
 
 ### Fixes
